@@ -1,6 +1,6 @@
 """
 ********************************************************************************
-utilities
+utilities (2D spatial operators)
 ********************************************************************************
 """
 
@@ -66,7 +66,7 @@ def advection(u, v, f, g, dx, dy, dt, scheme="1st"):
 
 def diffusion(nu, f, g, dx, dy, scheme="2nd", Cs=.1):
     """
-    diffusion of f and g
+    diffusion of f and g with nu
     """
     # strain rate tensor
     f_x = (f[2:, 1:-1] - f[:-2, 1:-1]) / (2. * dx)

@@ -10,6 +10,7 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
+import spatial_op_1D as sp_op
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--nx", type=int, default=101, help="resolution")
@@ -70,12 +71,17 @@ def main():
 
         # advection-diffusion
         u_old = u.copy()
-        u[1:-1] = u_old[1:-1] \
-                    + dt * (
-                        - ad * (u_old[2:] - u_old[:-2]) / (2. * dx)
-                        + np.abs(ad) * dx / 2. * (u_old[2:] - 2. * u_old[1:-1] + u_old[:-2]) / dx**2
-                        + nu * (u_old[2:] - 2. * u_old[1:-1] + u_old[:-2]) / dx**2
-                    )
+        # u[1:-1] = u_old[1:-1] \
+        #             + dt * (
+        #                 - ad * (u_old[2:] - u_old[:-2]) / (2. * dx)
+        #                 + np.abs(ad) * dx / 2. * (u_old[2:] - 2. * u_old[1:-1] + u_old[:-2]) / dx**2
+        #                 + nu * (u_old[2:] - 2. * u_old[1:-1] + u_old[:-2]) / dx**2
+        #             )
+
+        # use module
+        advc = sp_op.advection(ad, u_old, dx, dt, scheme="1st")
+        diff = sp_op.diffusion(nu, u_old, dx)
+        u[1:-1] = u_old[1:-1] + dt * (- advc + diff)
 
         # boundary
         u[0] = u_old[0]

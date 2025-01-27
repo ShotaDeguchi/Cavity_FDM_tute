@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-import spatial_op
+import spatial_op_2D as sp_op
 from cavity_ref import Ghia, Erturk
 
 
@@ -110,14 +110,14 @@ def main():
         v_hat = np.copy(v)
 
         # advection
-        advc_x, advc_y = spatial_op.advection(
+        advc_x, advc_y = sp_op.advection(
             u_old, v_old,
             u_old, v_old,
             dx, dy, dt, scheme="1st"
         )
 
         # diffusion
-        diff_x, diff_y = spatial_op.diffusion(
+        diff_x, diff_y = sp_op.diffusion(
             nu,
             u_old, v_old,
             dx, dy, scheme="2nd", Cs=args.Cs
@@ -128,7 +128,7 @@ def main():
         v_hat[1:-1, 1:-1] = v_old[1:-1, 1:-1] + dt * (- advc_y + diff_y)
 
         # PPE
-        div_hat = spatial_op.divergence(u_hat, v_hat, dx, dy)
+        div_hat = sp_op.divergence(u_hat, v_hat, dx, dy)
         b[1:-1, 1:-1] = rho / dt * div_hat
         for it_ppe in range(0, maxiter_ppe+1):
             p_old = np.copy(p)
